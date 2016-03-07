@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+      Currently Showing - <%= @title %>
+  </div>
+  <div class="panel-body">
+    <%= form_tag root_path, method: :get do %>
+      <%= label_tag :feedurl, "Please enter URL of RSS Feed you want to view here:" %>
+      <%= text_field_tag :feedurl, "", :class => 'form-control' %>
+      <%= submit_tag "Update Feed", name: nil, :class => "btn btn-primary" %>
+      <% end %>
+  </div>
+</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <%= @title %>
+  </div>
+  <ul class="list-group">
+    <% unless @feed.nil? %>
+      <% @feed.entries.each do |entry| %>
+      <% if user_signed_in? %>
+        <li class="list-group-item"><%= link_to entry.title, entry.url %> -
+                                                    <%= link_to "Add To Favorites", {:controller => "favorites",
+                                                                                                            :action => "create",
+                                                                                                            :user_id => current_user.id,
+                                                                                                            :title => entry.title,
+                                                                                                            :url => entry.url},
+                                                                                                            method: :post,
+                                                                                                            remote: true %> </li>
+        <% else %>
+          <li class="list-group-item"><%= link_to entry.title, entry.url %> - <%= link_to "Sign In To Favorite", new_user_session_path %></li>
+        <% end %>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
