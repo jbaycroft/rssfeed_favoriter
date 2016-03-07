@@ -27,7 +27,7 @@ class FavoritesController < ApplicationController
   # POST /favorites.json
   def create
     @favorite = @user.favorites.new(favorite_params)
-
+    @div = params[:url]
     respond_to do |format|
       if @favorite.save
         format.js

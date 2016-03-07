@@ -17,19 +17,30 @@
   <ul class="list-group">
     <% unless @feed.nil? %>
       <% @feed.entries.each do |entry| %>
-      <% if user_signed_in? %>
-        <li class="list-group-item"><%= link_to entry.title, entry.url %> -
-                                                    <%= link_to "Add To Favorites", {:controller => "favorites",
-                                                                                                            :action => "create",
-                                                                                                            :user_id => current_user.id,
-                                                                                                            :title => entry.title,
-                                                                                                            :url => entry.url},
-                                                                                                            method: :post,
-                                                                                                            remote: true %> </li>
+      <li class="list-group-item"><%= link_to entry.title, entry.url %>
+        <% if user_signed_in? && current_user.favorites.find_by_title(entry.title).blank? %>
+          <span id="favoriter"> - <%= link_to "Add To Favorites", { :controller => "favorites",
+                                                                                                          :action => "create",
+                                                                                                          :user_id => current_user.id,
+                                                                                                          :title => entry.title,
+                                                                                                          :url => entry.url},
+                                                                                                          method: :post,
+                                                                                                          remote: true %>
+          </span>
+        <% elsif user_signed_in?  %>
+         - Already a favorite.
         <% else %>
-          <li class="list-group-item"><%= link_to entry.title, entry.url %> - <%= link_to "Sign In To Favorite", new_user_session_path %></li>
+          - <%= link_to "Sign In To Favorite", new_user_session_path %></li>
         <% end %>
+        </li>
       <% end %>
     <% end %>
   </ul>
-</div>
+  <script type="text/javascript">
+    $(function(){
+      $("#favoriter").on("click",function(){
+        $(this).fadeOut();
+        $(this).parent('li').append("Already a favorite")
+      });
+    });
+  </script>
