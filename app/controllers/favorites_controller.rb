@@ -27,15 +27,7 @@ class FavoritesController < ApplicationController
   # POST /favorites.json
   def create
     @favorite = @user.favorites.new(favorite_params)
-    @div = params[:url]
-    respond_to do |format|
-      if @favorite.save
-        format.js
-      else
-        format.html { render :new }
-        format.json { render json: @favorite.errors, status: :unprocessable_entity }
-      end
-    end
+    @favorite.save
   end
 
   # PATCH/PUT /favorites/1
